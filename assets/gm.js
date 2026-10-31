@@ -42,9 +42,9 @@
         '<div class="animal-results">' + room.responses.map(function (r) { return '<article class="animal-row"><span class="player-name">' + esc(r.nickname) + '</span><div class="animal-pair">' + r.animals.map(function (a) { return '<span class="animal">' + esc(a) + '</span>'; }).join('') + '</div></article>'; }).join('') + '</div>';
       var settings = '';
       if (rules) {
-        settings = '<h3>苦手なタイプから除外する動物</h3><p class="note">「複雑」が苦手な人にはヤギを出しません。それ以外の対応は必要に応じて設定してください。</p><div class="rules-scroll"><table class="rules-table"><thead><tr><th>動物</th>' + kinds.map(function (k) { return '<th>' + k[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
+        settings = '<h3>苦手なタイプから除外する動物</h3><p class="note">「複雑」が苦手な人にはヤギを出しません。初期設定は、危険→スズメ、モラルなし→オットセイ、秘密が多い→ネコです。</p><div class="rules-scroll"><table class="rules-table"><thead><tr><th>動物</th>' + kinds.map(function (k) { return '<th>' + k[1] + '</th>'; }).join('') + '</tr></thead><tbody>' +
           animals.map(function (a, i) { return '<tr><th>' + a + '</th>' + kinds.map(function (k) { return '<td><input type="checkbox" class="rule" data-k="' + k[0] + '" data-i="' + i + '" aria-label="' + a + '：' + k[1] + 'が苦手なら除外"' + (rules.excluded[k[0]].indexOf(i) !== -1 ? ' checked' : '') + (i === 4 && k[0] === 'complex' ? ' disabled' : '') + '/></td>'; }).join('') + '</tr>'; }).join('') +
-          '</tbody></table></div><h3>経験回数への配慮（仮設定）</h3><label class="toggle-line"><input type="checkbox" id="beginner"' + (rules.beginnerAvoid ? ' checked' : '') + '/>0〜4回の人にはヤギを出さない</label><label class="toggle-line"><input type="checkbox" id="intermediate"' + (rules.intermediatePenalty ? ' checked' : '') + '/>5〜9回の人にはヤギを控えめにする</label><button type="button" class="secondary" id="saveRules"' + (busy ? ' disabled' : '') + '>設定を保存する</button>';
+          '</tbody></table></div><h3>経験回数への配慮（仮設定）</h3><label class="toggle-line"><input type="checkbox" id="beginner"' + ((rules.beginnerPenalty !== undefined ? rules.beginnerPenalty : rules.beginnerAvoid) ? ' checked' : '') + '/>0〜4回の人にはヤギを控えめにする（−4）</label><label class="toggle-line"><input type="checkbox" id="intermediate"' + (rules.intermediatePenalty ? ' checked' : '') + '/>5〜9回の人にはヤギを少し控えめにする（−2）</label><button type="button" class="secondary" id="saveRules"' + (busy ? ' disabled' : '') + '>設定を保存する</button>';
       }
       var wasOpen = app.querySelector('details.gm-settings') && app.querySelector('details.gm-settings').open;
       app.innerHTML = '<section class="gm-room"><button type="button" class="back" id="toList">← 卓の一覧</button><div class="gm-title-row"><div><p class="eyebrow">GAME MASTER</p><h2 class="gm-heading">' + esc(room.title) + '</h2></div><span class="count">' + room.responses.length + '<small> / 7</small></span></div>' +
@@ -58,7 +58,7 @@
       $('refresh').addEventListener('click', function () { action(function () { return openRoom(room.id); }); });
       app.querySelectorAll('.rule').forEach(function (c) { c.addEventListener('change', function () { var k = c.getAttribute('data-k'), i = Number(c.getAttribute('data-i')); var arr = rules.excluded[k]; rules.excluded[k] = arr.indexOf(i) !== -1 ? arr.filter(function (n) { return n !== i; }) : arr.concat([i]); }); });
       if (rules) {
-        $('beginner').addEventListener('change', function (e) { rules.beginnerAvoid = e.target.checked; });
+        $('beginner').addEventListener('change', function (e) { rules.beginnerPenalty = e.target.checked; if ('beginnerAvoid' in rules) rules.beginnerAvoid = e.target.checked; });
         $('intermediate').addEventListener('change', function (e) { rules.intermediatePenalty = e.target.checked; });
         $('saveRules').addEventListener('click', function () { action(async function () { await call({action: 'gmUpdate', id: room.id, rules: rules}); await openRoom(room.id); status = '設定を保存し、おすすめを更新しました。'; }); });
       }
