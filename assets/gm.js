@@ -2,6 +2,13 @@
 (function () {
   'use strict';
   var R = window.REQUIE3, esc = R.esc, api = R.api, $ = R.$, app = R.app;
+  // QRコード用の見た目（元のデザインのCSSには手を加えず、ここで追加）
+  document.head.insertAdjacentHTML('beforeend', '<style>' +
+    '.qr-box{margin:14px auto 10px;width:min(240px,70vw);background:#fff;padding:6px;border:1px solid var(--line)}.qr-box svg{display:block;width:100%;height:auto}' +
+    '.qr-overlay{position:fixed;inset:0;z-index:100;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;cursor:pointer}' +
+    '.qr-overlay .qr-big{width:min(82vw,70vh);background:#fff;padding:10px;border:1px solid var(--line)}.qr-overlay .qr-big svg{display:block;width:100%;height:auto}' +
+    '.qr-overlay h2{margin:0 0 6px}.qr-overlay p{margin:14px 0 0}' +
+    '</style>');
   // ── GM（gm/page.tsx・gm-client.tsx） ──
   function gmPage() {
     var animals = ['イヌ', 'サイ', 'オットセイ', 'トラ', 'ヤギ', 'ネコ', 'スズメ'];
@@ -48,11 +55,14 @@
       }
       var wasOpen = app.querySelector('details.gm-settings') && app.querySelector('details.gm-settings').open;
       app.innerHTML = '<section class="gm-room"><button type="button" class="back" id="toList">← 卓の一覧</button><div class="gm-title-row"><div><p class="eyebrow">GAME MASTER</p><h2 class="gm-heading">' + esc(room.title) + '</h2></div><span class="count">' + room.responses.length + '<small> / 7</small></span></div>' +
-        '<div class="share-box"><label class="field-label" for="share-url">参加者に渡す回答用URL</label><input id="share-url" class="text-input" readonly/><button type="button" class="secondary" id="copy">回答用URLをコピー</button><p class="note">このURLでは回答だけができます。結果は閲覧できません。</p></div>' +
+        '<div class="share-box"><label class="field-label" for="share-url">参加者に渡す回答用URL</label><input id="share-url" class="text-input" readonly/><div class="qr-box" id="qr"></div><button type="button" class="secondary" id="qrBig">QRコードを大きく表示</button><button type="button" class="secondary" id="copy">回答用URLをコピー</button><p class="note">このURLでは回答だけができます。結果は閲覧できません。</p></div>' +
         '<div class="results-header"><h3>おすすめの動物</h3><button type="button" class="back" id="refresh"' + (busy ? ' disabled' : '') + '>更新 ↻</button></div>' + resultsHtml +
         '<p class="note update-status">15秒ごとに更新 · 最終更新 ' + esc(lastUpdate) + '</p>' + (error ? '<p class="error" role="alert">' + esc(error) + '</p>' : '') + (status ? '<p class="copy-status" role="status">' + esc(status) + '</p>' : '') +
         '<details class="gm-settings"' + (wasOpen ? ' open' : '') + '><summary>GM用の設定</summary><p class="note">候補は個人ごとのおすすめです。7人の配役を確定するものではありません。</p>' + settings + '<button type="button" class="secondary" id="toggleOpen"' + (busy ? ' disabled' : '') + '>' + (room.open ? '回答の受付を終了する' : '回答の受付を再開する') + '</button></details>' + logout + '</section>';
       var su = $('share-url'); su.value = shareUrl; su.addEventListener('focus', function () { su.select(); });
+      // QRコードはこのページの中で作る（URLを外部サービスに送らない）
+      try { $('qr').innerHTML = window.REQUIE3_QR(shareUrl); } catch (e) { $('qr').style.display = 'none'; }
+      $('qrBig').addEventListener('click', function () { showQr(room.title, shareUrl); });
       $('toList').addEventListener('click', function () { room = null; error = ''; status = ''; if (timer) clearInterval(timer); action(loadList); });
       $('copy').addEventListener('click', copy);
       $('refresh').addEventListener('click', function () { action(function () { return openRoom(room.id); }); });
@@ -83,6 +93,13 @@
     async function copy() {
       try { await navigator.clipboard.writeText(shareUrl); status = '参加者用URLをコピーしました。'; render(); }
       catch (e) { status = '下の参加者用URLを選択してコピーしてください。'; render(); var s = $('share-url'); s.focus(); s.select(); }
+    }
+    // テーブルでプレイヤーに見せるための全画面QR。どこかをタップすると閉じる
+    function showQr(roomTitle, url) {
+      var o = document.createElement('div'); o.className = 'qr-overlay'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', '回答用QRコード');
+      o.innerHTML = '<p class="eyebrow">CHARACTER MATCH</p><h2>' + esc(roomTitle) + '</h2><p class="lead">スマホのカメラで読み取って、<br/>回答を始めてください。</p><div class="qr-big">' + window.REQUIE3_QR(url) + '</div><p class="note">画面をタップすると閉じます</p>';
+      o.addEventListener('click', function () { o.remove(); });
+      document.body.appendChild(o);
     }
     function doLogout() { var t = token; logoutLocal(); api({action: 'gmLogout', token: t}).catch(function () {}); list = []; error = ''; status = ''; render(); }
 
