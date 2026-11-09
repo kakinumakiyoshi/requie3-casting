@@ -32,7 +32,7 @@
 
   // ── 共通レイアウト（shell.tsx） ──
   document.body.insertAdjacentHTML('afterbegin',
-    '<div class="layout"><aside class="story"><a class="brand" href="./">REQUIE<span>Ⅲ</span><small>MURDER MYSTERY</small></a><div class="story-center"><div class="emblem" aria-hidden="true"><svg viewBox="0 0 280 280"><circle cx="140" cy="140" r="119"/><circle cx="140" cy="140" r="108"/><path d="M140 8v264M8 140h264M47 47l186 186M47 233L233 47" class="rays"/><path class="star" d="m140 49 22 61 65 2-51 40 18 63-54-37-54 37 18-63-51-40 65-2Z"/><circle cx="140" cy="140" r="7" class="dot"/></svg><span class="roman">VII</span></div>' +
+    '<div class="layout"><aside class="story"><a class="brand" href="./">REQUIE<span>Ⅲ</span><small>MURDER MYSTERY</small></a><div class="story-center"><div class="cover-title" aria-hidden="true"><img src="assets/cover-title.jpg" alt="" width="960" height="679"/></div>' +
     '<p class="overline">' + (gm ? 'BEHIND THE STORY' : 'FIND YOUR CHARACTER') + '</p><h1>' + (gm ? '七人の選択を、<br/>物語の始まりへ。' : 'あなたの選択が、<br/>ひとつの役に<br/>つながる。') + '</h1><p class="story-description">七人の人物。七つの視点。<br/>物語を始める、その前に。</p></div><div class="story-bottom"><span>REQUIEM · CHARACTER CASTING</span><span>01 — 07</span></div></aside>' +
     '<main><header class="topbar"><span>' + (gm ? 'GAME MASTER' : 'CHARACTER MATCH') + '</span><span class="edition">試作版</span></header><div id="app"></div><footer><span>REQUIEⅢ</span><span>結果はGMにだけ表示されます</span></footer></main></div>');
   var app = $('app');
