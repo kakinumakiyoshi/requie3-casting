@@ -33,7 +33,7 @@
   // ── 共通レイアウト（shell.tsx） ──
   document.body.insertAdjacentHTML('afterbegin',
     '<div class="layout"><aside class="story"><a class="brand" href="./">REQUIE<span>Ⅲ</span><small>MURDER MYSTERY</small></a><div class="story-center"><div class="cover-title" aria-hidden="true"><img src="assets/cover-title.jpg" alt="" width="960" height="754"/></div>' +
-    '<p class="overline">' + (gm ? 'BEHIND THE STORY' : 'FIND YOUR CHARACTER') + '</p><h1>' + (gm ? '七人の選択を、<br/>物語の始まりへ。' : 'あなたが着けるべき<br/>仮面は…') + '</h1><p class="story-description">' + (gm ? '七人の人物。七つの視点。<br/>物語を始める、その前に。' : '本当のあなたを知るための<br/>10の質問') + '</p></div><div class="story-bottom"><span>REQUIEM · CHARACTER CASTING</span><span>01 — 07</span></div></aside>' +
+    '<p class="overline">' + (gm ? 'BEHIND THE STORY' : 'FIND YOUR CHARACTER') + '</p><h1>' + (gm ? '七人の選択を、<br/>物語の始まりへ。' : 'これからあなたが着ける<br/>仮面を選びます') + '</h1><p class="story-description">' + (gm ? '七人の人物。七つの視点。<br/>物語を始める、その前に。' : '本当のあなたを知るための<br/>10の質問') + '</p></div><div class="story-bottom"><span>REQUIEM · CHARACTER CASTING</span><span>01 — 07</span></div></aside>' +
     '<main><header class="topbar"><span>' + (gm ? 'GAME MASTER' : 'CHARACTER MATCH') + '</span><span class="edition">試作版</span></header><div id="app"></div><footer><span>REQUIEⅢ</span><span>結果はGMにだけ表示されます</span></footer></main></div>');
   var app = $('app');
 
@@ -43,7 +43,7 @@
 
   // ── トップ（page.tsx） ──
   function home() {
-    app.innerHTML = '<section class="intro"><p class="eyebrow">CASTING YOUR STORY</p><h2>ここから<br/>もう一つのあなたが<br class="sp"/>決まります</h2><p class="lead">10の質問から、おすすめの役を見つけます。<br/>回答後、結果はGMだけが確認できます。</p><div class="facts"><div class="fact"><strong>10</strong><span>問</span><small>QUESTIONS</small></div><div class="fact"><strong>約3</strong><span>分</span><small>TIME</small></div><div class="fact"><strong>7</strong><span>人</span><small>PLAYERS</small></div></div><p class="lead">参加する方は、GMから届いた<br/>専用の回答用URLを開いてください。</p><a class="primary link-button" href="gm.html">GMとして卓を作成する<span aria-hidden="true">→</span></a><p class="note">プレイヤー画面には、おすすめの役や判定基準は表示されません。</p></section>';
+    app.innerHTML = '<section class="intro"><p class="eyebrow">CASTING YOUR STORY</p><h2>ここからもう1人の、<br/>あなたが始まる</h2><p class="lead">10の質問から、おすすめの役を見つけます。<br/>回答後、結果はGMだけが確認できます。</p><div class="facts"><div class="fact"><strong>10</strong><span>問</span><small>QUESTIONS</small></div><div class="fact"><strong>約3</strong><span>分</span><small>TIME</small></div><div class="fact"><strong>7</strong><span>人</span><small>PLAYERS</small></div></div><p class="lead">参加する方は、GMから届いた<br/>専用の回答用URLを開いてください。</p><a class="primary link-button" href="gm.html">GMとして卓を作成する<span aria-hidden="true">→</span></a><p class="note">プレイヤー画面には、おすすめの役や判定基準は表示されません。</p></section>';
   }
 
   // ── 参加者（player.tsx） ──
@@ -72,7 +72,7 @@
       if (stage === 'done') { app.innerHTML = '<section class="intro"><p class="eyebrow">THANK YOU</p><div class="submitted-mark" aria-hidden="true">✓</div><h2>回答を送りました。</h2><p class="lead">' + esc(nickname) + 'さん、回答はGMに届きました。<br/>この画面を閉じて、GMからの案内をお待ちください。</p><p class="note">診断結果はGMだけが確認できます。</p></section>'; return; }
       if (!room.open) { app.innerHTML = '<section class="intro"><p class="eyebrow">RECEPTION CLOSED</p><h2>受付は終了しました。</h2><p class="lead">GMに確認してください。</p></section>'; return; }
       if (stage === 'intro') {
-        app.innerHTML = '<section class="intro"><p class="eyebrow">' + esc(room.title) + '</p><h2>ここから<br/>もう一つのあなたが<br class="sp"/>決まります</h2><p class="lead">考え方と、演じてみたい役について。<br/>10の質問から、あなたに合う役を見つけます。</p><div class="facts"><div class="fact"><strong>10</strong><span>問</span><small>QUESTIONS</small></div><div class="fact"><strong>約3</strong><span>分</span><small>TIME</small></div></div><form id="start" autocomplete="off"><label class="field-label" for="nickname">GMに伝わる呼び名</label><input id="nickname" class="text-input" maxlength="30" required placeholder="ニックネームでOK" autocomplete="off"/><button class="primary" type="submit" id="startBtn" disabled>診断をはじめる<span aria-hidden="true">→</span></button></form><p class="note">回答と呼び名は、この卓のGMが確認するために保存されます。<br/>結果はプレイヤーには表示されません。</p></section>';
+        app.innerHTML = '<section class="intro"><p class="eyebrow">' + esc(room.title) + '</p><h2>ここからもう1人の、<br/>あなたが始まる</h2><p class="lead">考え方と、演じてみたい役について。<br/>10の質問から、あなたに合う役を見つけます。</p><div class="facts"><div class="fact"><strong>10</strong><span>問</span><small>QUESTIONS</small></div><div class="fact"><strong>約3</strong><span>分</span><small>TIME</small></div></div><form id="start" autocomplete="off"><label class="field-label" for="nickname">GMに伝わる呼び名</label><input id="nickname" class="text-input" maxlength="30" required placeholder="ニックネームでOK" autocomplete="off"/><button class="primary" type="submit" id="startBtn" disabled>診断をはじめる<span aria-hidden="true">→</span></button></form><p class="note">回答と呼び名は、この卓のGMが確認するために保存されます。<br/>結果はプレイヤーには表示されません。</p></section>';
         var input = $('nickname'); input.value = nickname;
         $('startBtn').disabled = !nickname.trim();
         input.addEventListener('input', function () { nickname = input.value; $('startBtn').disabled = !nickname.trim(); });
